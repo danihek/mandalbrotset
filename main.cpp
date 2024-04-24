@@ -1,50 +1,34 @@
+#include <iostream>
 #include <SFML/Window/Keyboard.hpp>
 #include <SFML/Graphics.hpp>
+#include <ostream>
 
 double map(double value, double start1, double stop1, double start2, double stop2);
 
-int WINDOW_W = 512;
-int WINDOW_H = 512;
+int WINDOW_W = 900;
+int WINDOW_H = 900;
 
-double xscalingFactor = 1;
-double yscalingFactor = 1;
+double scalingFactor = 1;
+double quality = 0.00;
+double qualityF = 0.05;
 
-int main()
-{	
-	
+int main(int argc, char *args[])
+{
 	sf::RenderWindow window(sf::VideoMode(WINDOW_W, WINDOW_H), "Mandalbrot Set");
 	sf::Event e;
+
+	while (!sf::Keyboard::isKeyPressed(sf::Keyboard::Enter)) {}
 
 	while (window.isOpen())
 	{
 		window.clear();
-
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
-		{
-			yscalingFactor=xscalingFactor-0.01;	
-		}
-
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
-		{
-			yscalingFactor=yscalingFactor+0.01;	
-		}
 	
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
-		{
-			xscalingFactor=xscalingFactor-0.01;	
-		}
-
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
-		{
-			xscalingFactor=yscalingFactor+0.01;	
-		}
-
 		for (int x = 0; x < WINDOW_W; x++)
 		{
 			for (int y = 0; y < WINDOW_H; y++)
 			{
-				double a = map(x, 0, WINDOW_W, xscalingFactor, -xscalingFactor);
-				double b = map(y, 0, WINDOW_H, yscalingFactor, -yscalingFactor);
+				double a = map(x, 0, WINDOW_W, -2, 2);
+				double b = map(y, 0, WINDOW_H, -2, 2);
 
 				double ca = a;
 				double cb = b;
@@ -60,7 +44,7 @@ int main()
 					a = aa + ca;
 					b = bb + cb;
 
-					if (std::abs(a + b) > 16)
+					if (std::abs(a + b) > quality)
 					{
 						break;
 					}
@@ -78,6 +62,8 @@ int main()
 			}
 		}
 		window.display();
+		quality += qualityF;
+		std::cout<<quality<<std::endl;
 	}
 
 	return 0;
